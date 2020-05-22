@@ -6,8 +6,9 @@ use v5.14.2;
 use DateTime::Format::Strptime;
 
 # дата для извлечения из файла лога инфы только за определенную дату
-my $strdate_argv = $ARGV[0]; # аргумент -- дата в формате YYYY-mm-dd
-# будем юзать либу для валидации дат и преобразования в dd/Mmm/YYYY
+my $strdate_argv = $ARGV[0]; # читаем входную дату, из первого аргумента командной строки
+
+# входная дата, в формате YYYY-mm-dd
 my $dt_format = DateTime::Format::Strptime->new(
     pattern  => '%Y-%m-%d',
     on_error => 'croak',
@@ -15,7 +16,7 @@ my $dt_format = DateTime::Format::Strptime->new(
 # читаем время в специальную переменную
 my $dt = $dt_format->parse_datetime($strdate_argv);
 
-# дата для парсинга
+# дата для парсинга, в формате dd/Mmm/YYYY
    $dt_format = DateTime::Format::Strptime->new(
     pattern  => '%d\/%b\/%Y',
     on_error => 'croak',
@@ -35,7 +36,7 @@ my $strdate_head = $dt_format->format_datetime($dt);
 =cut
 #комментарий в шапке не выводим, поэтому этот кусок не нужен - END
 
-# дата для имени входного файла
+# дата для имени входного файла, в формате YYYYmm
    $dt_format = DateTime::Format::Strptime->new(
     pattern  => '%Y%m',
     on_error => 'croak',
@@ -88,9 +89,10 @@ close $fh;
 
 # выводим результат
 
+# файл для вывода отчета, открываем
 my $o_filename = $strdate_argv.".csv";
-
 open($fh, '>', $o_filename) or die "Could not open file '$o_filename' $!";
+
 # шапка csv
 #комментарий в шапке не выводим, поэтому этот кусок не нужен - BEGIN2
 =comment
