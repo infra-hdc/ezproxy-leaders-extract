@@ -5,9 +5,11 @@ use v5.14.2;
 ## дать в консоли: perl -MCPAN -e 'install DateTime::Format::Strptime'
 use DateTime::Format::Strptime;
 
-# дата для извлечения из файла лога инфы только за определенную дату
-my $strdate_argv = $ARGV[0]; # читаем входную дату, из первого аргумента командной строки
+# 1/2 Извлечение данных (pErl)
 
+# дата для извлечения из файла лога инфы только за определенную дату
+my $strdate_argv = $ARGV[0]  # читаем входную дату, из первого аргумента командной строки
+   or die "Usage: script.pl YYYY-mm-dd";
 # входная дата, в формате YYYY-mm-dd
 my $dt_format = DateTime::Format::Strptime->new(
     pattern  => '%Y-%m-%d',
@@ -15,13 +17,15 @@ my $dt_format = DateTime::Format::Strptime->new(
 );
 # читаем время в специальную переменную
 my $dt = $dt_format->parse_datetime($strdate_argv);
+# перезаписываем более корректно входную дату, если, например, в месяце нет ведущих нулей
+   $strdate_argv = $dt_format->format_datetime($dt);
 
-# дата для парсинга, в формате dd/Mmm/YYYY
+# дата для парсинга лога, в формате dd/Mmm/YYYY
    $dt_format = DateTime::Format::Strptime->new(
     pattern  => '%d\/%b\/%Y',
     on_error => 'croak',
 );
-# дата для парсинга -- в строку
+# дата для парсинга лога -- в строку
 my $strdate_parsing = $dt_format->format_datetime($dt);
 
 #комментарий в шапке не выводим, поэтому этот кусок не нужен - BEGIN
@@ -87,7 +91,7 @@ while (my $row = <$fh>) {
 
 close $fh;
 
-# выводим результат
+# 2/2 Формирование отчета (peRl)
 
 # файл для вывода отчета, открываем
 my $o_filename = $strdate_argv.".csv";
