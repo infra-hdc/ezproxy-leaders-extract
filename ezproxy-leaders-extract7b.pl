@@ -118,15 +118,20 @@ for my $key (sort { $hosts1{$b}{SIZE} <=> $hosts1{$a}{SIZE} } keys %hosts1) {
   } else {
     # иначе получаем значения в процентах -- в версии 7b процент считается не по количествам обращений,
     # а по трафику
+    my $all_zero = ($hosts1{$key}{SIZE} == 0); # суммарный трафик -- нуль?
+    if (!$all_zero) { # не нуль -- высчитываем процентный вклад в каждый IP-адрес
     for my $ips_desc_i (@ips_desc) {
       $hosts1{$key}{IP_SIZE_P}{$ips_desc_i} =
         $hosts1{$key}{IP_SIZE}{$ips_desc_i} * 100 / $hosts1{$key}{SIZE};
-    }
+    }}
     # добавляем вывод в массив для вывода
     for my $ips_desc_i (@ips_desc) {
       push @{$hosts1{$key}{IP_OUT}},
-        sprintf("%s\(%.0f%%\)",$ips_desc_i,$hosts1{$key}{IP_SIZE_P}{$ips_desc_i});
-    };
+        (!$all_zero ? # суммарный трафик -- нуль?
+          sprintf("%s\(%.0f%%\)",$ips_desc_i,$hosts1{$key}{IP_SIZE_P}{$ips_desc_i}) # тогда с добавлением %
+          : sprintf("%s\(0\)",$ips_desc_i)                                          # иначе с нулями  
+        );
+    }
     # выводим из массива наши IP-адреса
     $ip_out = join ' ', @{$hosts1{$key}{IP_OUT}};
   }
