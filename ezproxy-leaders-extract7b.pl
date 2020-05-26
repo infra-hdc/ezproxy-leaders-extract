@@ -128,7 +128,7 @@ for my $key (sort { $hosts1{$b}{SIZE} <=> $hosts1{$a}{SIZE} } keys %hosts1) {
       push @{$hosts1{$key}{IP_OUT}},
         ($hosts1{$key}{SIZE} ? # суммарный трафик -- не нуль?
           sprintf("%s\(%.0f%%\)",$ips_desc_i,$hosts1{$key}{IP_SIZE_P}{$ips_desc_i}) # тогда с добавлением %
-          : sprintf("%s",$ips_desc_i)                                          # иначе с нулями  
+          : sprintf("%s",$ips_desc_i)                                               # иначе просто
         );
     }
     # выводим из массива наши IP-адреса
