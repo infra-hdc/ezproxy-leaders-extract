@@ -64,7 +64,7 @@ namespace helloconsole0001
             //Console.WriteLine("{0} {1}", strdate_parsing, pattern);
             //return(0);
             
-            string i_path = @".\ezp"+dateValue.ToString("yyyyMM")+".log"; // файл со входными данными
+            string i_path = $".{Path.DirectorySeparatorChar}ezp"+dateValue.ToString("yyyyMM")+".log"; // файл со входными данными
             try
             {
                 using (StreamReader sr = new StreamReader(i_path, System.Text.Encoding.Default))
